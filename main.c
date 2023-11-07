@@ -1,8 +1,7 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <stdint.h>
+#include<stdlib.h>
 #include <string.h>
-#include <stddef.h>
 
 static const uint8_t sbox[256] =   {
   //0     1    2      3     4    5       6     7      8    9     A      B    C     D     E     F
@@ -66,33 +65,285 @@ static const uint8_t Rcon[255] = {
   0xc6, 0x97, 0x35, 0x6a, 0xd4, 0xb3, 0x7d, 0xfa, 0xef, 0xc5, 0x91, 0x39, 0x72, 0xe4, 0xd3, 0xbd, 
   0x61, 0xc2, 0x9f, 0x25, 0x4a, 0x94, 0x33, 0x66, 0xcc, 0x83, 0x1d, 0x3a, 0x74, 0xe8, 0xcb  };
 
+//begin of key expand
 
-// uint8_t key_state(char *plaintext){
-//   uint8_t key_state[16];
-//   for (size_t i = 0; i < 16; i++)
-//   {
-    
-//   }
-  
-// }
-void key_state(const char *plaintext, uint8_t *key_state) {
-    for (size_t i = 0; i < 16; i++) {
-        key_state[i] = sbox[(uint8_t)plaintext[i]];
+uint8_t* stringToBytes(char* string) {
+
+  // Trouver la longueur de la chaîne
+  int len = strlen(string);
+
+  // Allouer un tableau pour contenir les octets
+  uint8_t* bytes =malloc(len*sizeof(uint8_t));
+
+  // Parcourir chaque caractère 
+  int i;
+  for(i=0; i<len; i++) {
+
+    // Convertir le caractère en uint8_t et le stocker
+    bytes[i] = (uint8_t)string[i]; 
+  }
+
+  return bytes;
+
+}
+void keyExpansion(const uint8_t *cipherKey, uint8_t *expandedKey) {
+    for (int i = 0; i < 16; i++) {
+        expandedKey[i] = cipherKey[i];
+    }
+
+    int bytesGenerated = 16;
+    int rconIteration = 1;
+    uint8_t temp[4];
+
+    while (bytesGenerated < 176) {
+        for (int i = 0; i < 4; i++) {
+            temp[i] = expandedKey[i + bytesGenerated - 4];
+        }
+
+        if (bytesGenerated % 16 == 0) {
+            uint8_t t = temp[0];
+            temp[0] = temp[1];
+            temp[1] = temp[2];
+            temp[2] = temp[3];
+            temp[3] = t;
+
+            for (int i = 0; i < 4; i++) {
+                temp[i] = sbox[temp[i]];
+            }
+
+            temp[0] = temp[0] ^ Rcon[rconIteration];
+            rconIteration++;
+        }
+
+        for (unsigned int i = 0; i < 4; i++) {
+            expandedKey[bytesGenerated] = expandedKey[bytesGenerated - 16] ^ temp[i];
+            bytesGenerated++;
+        }
     }
 }
 
-void test__(const char *plaintext)
+void SubBytes(uint8_t* state) {
 
-int main(int argc, char *argv[]) {
-    char *test1 = "TEAMSCORPIAN1234";
-    uint8_t test[16];
-    key_state(test1, test);
+  int i;
 
-    printf("Tableau hexadécimal: ");
-    for (int i = 0; i < 16; i++) {
-        printf("%c ", test[i]);
+  // Itérer sur chaque octet du state
+  for(i=0; i<16; i++) {
+
+    // Utiliser la valeur de l'octet comme index pour la Sbox 
+    state[i] = sbox[state[i]];
+
+  }
+
+}
+
+uint8_t hexToBin(uint8_t hex) {
+
+  uint8_t bin = 0;
+
+  // Itérer sur chaque digit hex 
+  for (int i = 0; i < 2; i++) {
+
+    // Extraire le digit courant
+    uint8_t digit = (hex >> (4 * (1 - i))) & 0xF;
+
+    // Convertir en binaire
+    if (digit >= 0 && digit <= 9) {
+      bin |= (digit << (4 * i)); 
     }
+    else if (digit >= 0xA && digit <= 0xF) {
+      bin |= ((digit - 0xA + 10) << (4 * i));
+    }
+  }
+
+  return bin;
+
+}
+
+uint8_t xorBytes(uint8_t byte1, uint8_t byte2) {
+
+  uint8_t result = 0;
+
+  for (int i = 0; i < 16; i++) {
+
+    // Extraire les bits 
+    uint8_t bit1 = (byte1 >> i) & 1; 
+    uint8_t bit2 = (byte2 >> i) & 1;
+
+    // Faire le XOR
+    uint8_t xorBit = bit1 ^ bit2;
+
+    // Mettre le bit résultat dans le résultat
+    result |= (xorBit << i); 
+  }
+
+  return result;
+
+}
+
+uint8_t binToHex(uint8_t bin) {
+  
+  uint8_t hex = 0;
+
+  // Itérer sur chaque groupe de 4 bits
+  for (int i = 0; i < 2; i++) {
+
+    // Extraire les 4 bits
+    uint8_t nibble = (bin >> (4 * (1 - i))) & 0xF;
+
+    // Convertir en hex 
+    if (nibble >= 0 && nibble <= 9) {
+      hex |= (nibble << (4 * i));
+    } else if (nibble >= 0xA && nibble <= 0xF) {
+      hex |= ((nibble - 0xA + 10) << (4 * i)); 
+    }
+  }
+
+  return hex;
+
+}
+// Prend deux tableaux d'octets hexadécimaux
+uint8_t* xorHexBytes(uint8_t* hex1, uint8_t* hex2, int len) {
+
+  // Allouer le tableau résultat
+  uint8_t* result = malloc(len);
+
+  // Parcourir chaque paire d'octets
+  for (int i = 0; i < len; i++) {
+
+    // Convertir les octets hex en binaire 
+    uint8_t byte1 = hexToBin(hex1[i]);
+    uint8_t byte2 = hexToBin(hex2[i]); 
+
+    // Faire le XOR binaire
+    uint8_t xored = xorBytes(byte1, byte2);
+
+    // Convertir le résultat xor en hex
+    result[i] = binToHex(xored);
+  }
+
+  return result;
+
+}
+
+
+void shiftRows(uint8_t* state) {
+
+  uint8_t temp;
+
+  // Décalage sur la première ligne
+  temp = state[1];
+  state[1] = state[5];
+  state[5] = state[9];
+  state[9] = state[13];
+  state[13] = temp;
+
+  // Décalage sur la deuxième ligne
+  temp = state[2];
+  state[2] = state[10];
+  state[10] = temp;
+  temp = state[6];
+  state[6] = state[14];
+  state[14] = temp;
+
+  // Décalage sur la troisième ligne
+  temp = state[15];
+  state[15] = state[11];
+  state[11] = state[7];
+  state[7] = state[3];
+  state[3] = temp;
+
+}
+
+//MIX co;umn
+
+// Matrice de multiplication dans GF(2^8)
+// Matrice de multiplication dans GF(2^8)
+const uint8_t mixColMatrix[4][4] = {
+  {0x02, 0x03, 0x01, 0x01},
+  {0x01, 0x02, 0x03, 0x01},
+  {0x01, 0x01, 0x02, 0x03},
+  {0x03, 0x01, 0x01, 0x02}
+};
+
+// Polynôme irréductible pour GF(2^8) 
+#define AES_POLY 0x1b
+
+uint8_t gfMult(uint8_t a, uint8_t b) {
+  uint8_t result = 0; 
+
+  while (b > 0) {
+    // Si b est impair, ajouter a à result
+    if (b & 1) {
+      result ^= a; 
+    }
+
+    // Doubler a dans GF(2^8)
+    a = (a << 1) ^ ((a & 0x80) ? AES_POLY : 0);
+
+    // Diviser b par 2
+    b >>= 1; 
+  }
+
+  return result;
+}
+
+// Matrice de mixage  
+void mixColumns(uint8_t* state) {
+  uint8_t temp[16];
+
+  // Copier state dans temp
+  for (int i = 0; i < 16; i++) {
+    temp[i] = state[i];
+  }
+
+  // Iterer sur les colonnes
+  for (int i = 0; i < 4; i++) {
+    // Initialiser la colonne temporaire
+    uint8_t t0 = temp[i];
+    uint8_t t1 = temp[4+i];
+    uint8_t t2 = temp[8+i]; 
+    uint8_t t3 = temp[12+i];
+
+    // Calculer la nouvelle colonne
+    state[i] = gfMult(0x02, t0) ^ gfMult(0x03, t1) ^  
+              gfMult(0x01, t2) ^ gfMult(0x01, t3);
+
+    state[4+i] = gfMult(0x01, t0) ^ gfMult(0x02, t1) ^ 
+                gfMult(0x03, t2) ^ gfMult(0x01, t3);
+
+    state[8+i] = gfMult(0x01, t0) ^ gfMult(0x01, t1) ^
+                gfMult(0x02, t2) ^ gfMult(0x03, t3);
+
+    state[12+i] = gfMult(0x03, t0) ^ gfMult(0x01, t1) ^ 
+                 gfMult(0x01, t2) ^ gfMult(0x02, t3);
+  }
+}
+
+int main() {
+
+    char* string = "MESSAGEENCRPTION";
+    uint8_t* bytes = stringToBytes(string);
+    uint8_t plain_text [16]={'M','E' ,'S','S','A','G','E','E','N','C','R','P','T','I','O','N'};
+    uint8_t cipherKey[16] = {'T', 'E', 'A', 'M', 'S', 'C', 'O', 'R', 'P', 'I', 'A', 'N', '1', '2', '3', '4'};
+    uint8_t expandedKey[176];
+    keyExpansion(cipherKey, expandedKey);
+    uint8_t *xor= xorHexBytes(expandedKey , bytes,16);
+    SubBytes(xor);
+    shiftRows(xor);
+    mixColumns(xor);
+    
+    for (int i = 0 ; i<strlen(string);i++)
+    {
+        // printf("%02X ", xor[i]);
+        printf("%c ", (char)xor[i]);
+    }
+
+    // printf("Expanded Key: ");
+    // for (int i = 0; i < 176; i++) {
+    //     printf("%02X ", expandedKey[i]);
+    // }
     printf("\n");
 
     return 0;
+    
 }
