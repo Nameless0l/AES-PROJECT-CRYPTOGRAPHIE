@@ -321,21 +321,21 @@ void mixColumns(uint8_t* state) {
 
 int main() {
 
-    char* string = "MESSAGEENCRPTION";
-    uint8_t* bytes = stringToBytes(string);
-    uint8_t plain_text [16]={'M','E' ,'S','S','A','G','E','E','N','C','R','P','T','I','O','N'};
-    uint8_t cipherKey[16] = {'T', 'E', 'A', 'M', 'S', 'C', 'O', 'R', 'P', 'I', 'A', 'N', '1', '2', '3', '4'};
+    uint8_t plain_text [16]="MESSAGEENCRPTION";
+    uint8_t cipherKey[16] = "TEAMSCORPIAN1234";;
     uint8_t expandedKey[176];
+
+    uint8_t* bytes = stringToBytes(plain_text);
     keyExpansion(cipherKey, expandedKey);
     uint8_t *xor= xorHexBytes(expandedKey , bytes,16);
     SubBytes(xor);
     shiftRows(xor);
-    mixColumns(xor);
+    // mixColumns(xor);
     
-    for (int i = 0 ; i<strlen(string);i++)
+    for (int i = 0 ; i<strlen(plain_text)-1;i++)
     {
         // printf("%02X ", xor[i]);
-        printf("%c ", (char)xor[i]);
+        printf("%d %02X --->%c \n",i+1, xor[i], xor[i]);
     }
 
     // printf("Expanded Key: ");
