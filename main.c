@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include<stdlib.h>
 #include <string.h>
+#include <locale.h>
 
 static const uint8_t sbox[256] =   {
   //0     1    2      3     4    5       6     7      8    9     A      B    C     D     E     F
@@ -82,7 +83,6 @@ uint8_t* stringToBytes(char* string) {
     // Convertir le caractère en uint8_t et le stocker
     bytes[i] = (uint8_t)string[i]; 
   }
-
   return bytes;
 
 }
@@ -127,12 +127,15 @@ void SubBytes(uint8_t* state) {
   int i;
 
   // Itérer sur chaque octet du state
+  printf("Subytes   : ");
   for(i=0; i<16; i++) {
 
     // Utiliser la valeur de l'octet comme index pour la Sbox 
     state[i] = sbox[state[i]];
+    printf("%02x ",state[i]);
 
   }
+  printf("\n");
 
 }
 
@@ -202,16 +205,17 @@ uint8_t binToHex(uint8_t bin) {
 
 }
 // Prend deux tableaux d'octets hexadécimaux
-uint8_t* xorHexBytes(uint8_t* hex1, uint8_t* hex2, int len) {
-
+uint8_t* xorHexBytes(uint8_t* cipherkey, uint8_t* hex2) {
+  const int len = 16;
   // Allouer le tableau résultat
   uint8_t* result = malloc(len);
-
+  printf("Key       : ");
   // Parcourir chaque paire d'octets
   for (int i = 0; i < len; i++) {
+    printf("%02x ",cipherkey[i]);
 
     // Convertir les octets hex en binaire 
-    uint8_t byte1 = hexToBin(hex1[i]);
+    uint8_t byte1 = hexToBin(cipherkey[i]);
     uint8_t byte2 = hexToBin(hex2[i]); 
 
     // Faire le XOR binaire
@@ -220,7 +224,7 @@ uint8_t* xorHexBytes(uint8_t* hex1, uint8_t* hex2, int len) {
     // Convertir le résultat xor en hex
     result[i] = binToHex(xored);
   }
-
+printf("\n");
   return result;
 
 }
@@ -251,6 +255,12 @@ void shiftRows(uint8_t* state) {
   state[11] = state[7];
   state[7] = state[3];
   state[3] = temp;
+  printf("Shift row : ");
+  for (size_t i = 0; i < 16; i++)
+  {
+    printf("%02x " , state[i]);
+  }
+  printf("\n");
 
 }
 
@@ -317,31 +327,65 @@ void mixColumns(uint8_t* state) {
     state[12+i] = gfMult(0x03, t0) ^ gfMult(0x01, t1) ^ 
                  gfMult(0x01, t2) ^ gfMult(0x02, t3);
   }
+  printf("Mix Column: ");
+  for (size_t i = 0; i < 16; i++)
+  {
+    printf("%02x ",state[i]);
+  }
+  printf("\n");
+  
+}
+
+uint8_t* aes(uint8_t *plain_text , uint8_t *key){
+
+    uint8_t expandedKey[176]; //
+    keyExpansion(key, expandedKey);
+    uint8_t* intermediate_text = stringToBytes(plain_text);
+
+   for (size_t i = 1; i <= 10; i++)
+    {
+        SubBytes(intermediate_text); ///
+        shiftRows(intermediate_text);
+        mixColumns(intermediate_text);
+        intermediate_text= xorHexBytes(&expandedKey[16*i] , intermediate_text);
+        printf("\n");
+    }
+   
+    // SubBytes(intermediate_text); 
+    // shiftRows(intermediate_text);
+    // intermediate_text= xorHexBytes(&expandedKey[160] , intermediate_text);
+    return  intermediate_text ;
 }
 
 int main() {
 
-    uint8_t plain_text [16]="MESSAGEENCRPTION";
-    uint8_t cipherKey[16] = "TEAMSCORPIAN1234";;
-    uint8_t expandedKey[176];
+    uint8_t plain_text [16]="MESSAAAENCRPTION";
+    uint8_t key[16] = "TEAMSCORPIAN1PPP";
+    uint8_t *cypher_text ;
+  for (size_t i = 0; i < 16; i++)
+  {
+    printf("%02x ",key[i]);
+  }
+  return 0 ;
+    cypher_text =  aes(plain_text , key);
 
-    uint8_t* bytes = stringToBytes(plain_text);
-    keyExpansion(cipherKey, expandedKey);
-    uint8_t *xor= xorHexBytes(expandedKey , bytes,16);
-    SubBytes(xor);
-    shiftRows(xor);
-    // mixColumns(xor);
+    printf("\n");
+    printf("CypherHexa: ");
     
-    for (int i = 0 ; i<strlen(plain_text)-1;i++)
+    for (int i = 0 ; i<16;i++)
     {
-        // printf("%02X ", xor[i]);
-        printf("%d %02X --->%c \n",i+1, xor[i], xor[i]);
+      setlocale(LC_CTYPE,"");
+        printf("%02X ",  cypher_text[i]);
+        // printf("%c",  cypher_text[i]);
     }
 
-    // printf("Expanded Key: ");
-    // for (int i = 0; i < 176; i++) {
-    //     printf("%02X ", expandedKey[i]);
-    // }
+  printf("\n");
+  printf("CypherText: ");
+  for (int i = 0 ; i<16;i++)
+    {
+      setlocale(LC_CTYPE,"");
+        printf("%c",  cypher_text[i]);
+    }
     printf("\n");
 
     return 0;
