@@ -3,9 +3,9 @@
 extern const Byte sbox[256];
 
 // Main function which encrypt the message
-void aesEncrypt(Byte *expandedKey, Byte *input, Byte *output){
+void aesEncrypt(Byte *expandedKey, Byte *input, OUT Byte *output){
     // The work is done on the output variable
-    memcpy(output, createInput(input), 16);
+    memcpy(output, input, 16);
     
     // First XOR with the key before launching the AES's rounds
     addRoundKey(expandedKey, output);
@@ -19,7 +19,7 @@ void aesEncrypt(Byte *expandedKey, Byte *input, Byte *output){
 }
 
 // Represents a AES's round
-void aes_round(Byte *input, Byte *key){
+void aes_round(HYB Byte *input, Byte *key){
 	subBytes(input);
 	shiftRows(input);
 	mixColumns(input);
@@ -27,14 +27,14 @@ void aes_round(Byte *input, Byte *key){
 }
 
 // Represents the AES's final round
-void final_round(Byte *input, Byte *key){
+void final_round(HYB Byte *input, Byte *key){
     subBytes(input);
     shiftRows(input);
     addRoundKey(key, input);
 }
 
 // Shifts to the left a row by 1
-void shiftRow(Byte *row, int nShift){
+void shiftRow(HYB Byte *row, int nShift){
 	for (int n = 0; n < nShift; n++) {
 		Byte b = row[0];
 		memcpy(row, row + 1, 3);
@@ -43,19 +43,19 @@ void shiftRow(Byte *row, int nShift){
 }
 
 // Shifts to the left the lines of the state successively by 0, 1, 2 and 3
-void shiftRows(Byte* state) {
+void shiftRows(HYB Byte* state) {
 	for(int nShift = 0; nShift < 4; nShift++)
     	shiftRow(state + nShift * 4, nShift);
 }
 
 // Replaces all the values of the state by theirs correspondings in the sbox
-void subBytes(Byte* state) {
+void subBytes(HYB Byte* state) {
   for (int i = 0; i < SIZE_16; i++)
     state[i] = sbox[state[i]];
 }
 
 // Applys a multiplication of the state and the C AES's matrix in the Galois corps
-void mixColumns(Byte* state) {
+void mixColumns(HYB Byte* state) {
 	execMixColumns(state, (Byte[]){0x02, 0x03, 0x01, 0x01});
 }
 

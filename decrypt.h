@@ -5,13 +5,13 @@
 
 #include "data.h"
 
-void aesDecrypt(Byte *expandedKey, Byte *input, Byte *output);
+void aesDecrypt(Byte *expandedKey, Byte *input, OUT Byte *output);
 
 void aes_invRound(Byte *input, Byte *key);
-void invSubBytes(Byte* state);
-void invShiftRows(Byte* state);
-void invShiftRow(Byte *row, int nShift);
-void invMixColumns(Byte* state);
-void final_invRound(Byte *input, Byte *key);
+void invSubBytes(HYB Byte* state);
+void invShiftRows(HYB Byte* state);
+void invShiftRow(HYB Byte *row, int nShift);
+void invMixColumns(HYB Byte* state);
+void final_invRound(HYB Byte *input, Byte *key);
 	
 #endif //__DECRYPT_H__

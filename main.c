@@ -1,28 +1,37 @@
 #include "data.h"
 
 int main(int argc, char **argv) {
-	Byte encryptedOutput[SIZE_16], decryptedOutput[SIZE_16];
-	Byte expandedKey[(NROUNDS + 1) * SIZE_16];
-    Byte input[SIZE_16] = "MESSAGEENCRPTION";
-    Byte key[SIZE_16] = "TEAMSCORPIAN1234";
-    
-    // Welcome
-    printf("*** AES ENCRYPTION AND DECRYPTION ***\n\n");
-    
-    // Generation of the NROUNDS keys
-    keyExpansion(key, expandedKey);
-    
-    // Encrypting
-	aesEncrypt(expandedKey, input, encryptedOutput);
+	srand(time(NULL));
 	
-    // Decrypting
-    aesDecrypt(expandedKey, encryptedOutput, decryptedOutput);
-    
-    // Displaying Key and Input data, Encrypted and Decrypted texts
-    printBytes("KEY", key);
-    printBytes("INPUT", input);
-	printBytes("ENCRYPTED OUTPUT AND NEW INPUT FOR DECRYPTION", encryptedOutput);
-	printBytes("DECRYPTED OUTPUT", decryptedOutput);
+	int inputLength, nBlock;
+	Byte *input, *encOutput, *decOutput;
+	Byte key[SIZE_16] = "TEAMSCORPIAN1234";
+	Byte expandedKey[(NROUNDS + 1) * SIZE_16];
 
-    return EXIT_SUCCESS;
+	// Welcome
+	printf("*** AES ENCRYPTION AND DECRYPTION ***\n\n");
+	
+	// Read message to encrypt
+	input = readEntry("Enter your message : ", &inputLength, &nBlock);
+	printf("\n");
+	
+	// Generation of the NROUNDS keys
+	keyExpansion(key, expandedKey);
+		
+	// Displaying Key data
+	printBytes("KEY", key, SIZE_16);
+	
+	// Encrypting and Decrypting message
+	const int finalSize = nBlock * SIZE_16 * sizeof(Byte);
+	encOutput = (Byte*)malloc(finalSize);
+	decOutput = (Byte*)malloc(finalSize);
+	
+	// AES's Main function
+	aesMain(expandedKey, input, nBlock, encOutput, decOutput);
+	
+	// Displaying Encrypted and Decrypted texts
+	printBytes("ENCRYPTED OUTPUT AND NEW INPUT FOR DECRYPTION", encOutput, inputLength);
+	printBytes("DECRYPTED OUTPUT", transpose(decOutput, nBlock), inputLength);
+	
+	return EXIT_SUCCESS;
 }

@@ -3,19 +3,21 @@
 extern const Byte sbox[256];
 extern const Byte Rcon[255];
 
+// mixcol_table is a kind of table used to represent all the AES's C matrix 
 // Execute mixcolums corresponding to the mixcol_table given
 // Either for the normal execution (encryption) or inverted (decryption)
-void execMixColumns(Byte* state, Byte *mixcol_table) {	
+void execMixColumns(HYB Byte* state, Byte *mixcol_table) {
+	// mixcol_i is used to browse the mixcol_table
   	int i, j, mixcol_i;
   
   	for (i = 0; i < 4; i++) {
-	  	Byte col[4];
+	  	Byte col[4]; // Used to store each column of the state
 	  	
 	  	for(j = 0; j < 4; j++)
 	  		col[j] = state[j * 4 + i];
 	  		
 	  	for(j = 0; j < 4; j++){
-	  		state[j * 4 + i] = 0;
+	  		state[j * 4 + i] = 0; // 0 is the neutral element of the addition (substration)
 	  		
 	  		// Xoring successively the values for each column
 		  	for(mixcol_i = 0; mixcol_i < 4; mixcol_i++)
@@ -25,11 +27,11 @@ void execMixColumns(Byte* state, Byte *mixcol_table) {
 }
 
 // Generation of the NROUNDS keys
-void keyExpansion(const Byte *cipherKey, Byte *expandedKey) {
+void keyExpansion(const Byte *cipherKey, OUT Byte *expandedKey) {
 	int i;
 	int bytesGenerated = SIZE_16;
-    int rconIteration = 1;
-    Byte tmp[4];
+	int rconIteration = 1;
+	Byte tmp[4];
     
     memcpy(expandedKey, cipherKey, SIZE_16);
 
@@ -63,23 +65,32 @@ void keyExpansion(const Byte *cipherKey, Byte *expandedKey) {
  *The clear text given is filled into following the order a0,0 a1,0 a2,0 a3,0 a0,1... a2,3 a3,3
  * It is the role of the following function. It returns that matrix (table) filled
 **/
-Byte *createInput(Byte *input){
-	Byte *new_input = (Byte*)malloc(SIZE_16 * sizeof(Byte));
+Byte *transpose(Byte *input, int nBlock){
+	Byte *new_input = (Byte*)malloc(nBlock * SIZE_16 * sizeof(Byte));
 	
-    int i, j;
-	for (i = 0; i < 4; i++)
-	    for (j = 0; j < 4; j++)
-	        new_input[(i + (j * 4))] = (Byte)input[(i * 4) + j];
+	int i, j, k;
+	
+	Byte *new_in = new_input;
+			
+	// Transpose successively all the block (16 bytes each) of the state : Columns become Rows and Rows become Columns
+	for(k = 0; k < nBlock; k++){
+		for (i = 0; i < 4; i++)
+		    for (j = 0; j < 4; j++)
+			new_in[(i + (j * 4))] = (Byte)input[(i * 4) + j];
+			
+		new_in += SIZE_16;
+	}
 	        
 	return new_input;
 }	
 
 // XOR the key and the input
-void addRoundKey(Byte* cipherKey, Byte* input) {
-	cipherKey = createInput(cipherKey);
-    
+void addRoundKey(Byte* key, HYB Byte* input) {
+	key = transpose(key, SIZE_16);
+
+	// Xoring successively the values of input and the key    
     for (int i = 0; i < SIZE_16; i++)
-        input[i] ^= cipherKey[i];
+        input[i] ^= key[i];
 }
 
 // Multiply the bytes a and b in the Galois corps
@@ -98,12 +109,107 @@ Byte gfMult(Byte b, Byte a) {
   return result;
 }
 
-// Display as a matrix the bytes contained by "string" in hexadecimal and character modes
-void printBytes(char *string, Byte *text){
-	printf("%s :\n", string);
-	
-    for(int i = 0; i < SIZE_16; i++)
-        printf("%02X(%c)%c",text[i], text[i], (i + 1) % 4 ? ' ' : '\n');
-        
-    printf("\n");
+// Just print a decoration line like "+--+--+" for aesthetic
+void printDecorationLine(int n){
+	printf("+");
+	for(int i = 0; i < n; i++)
+		printf("--+");
+		
+	printf("\n");
 }
+
+// Display the characters codes and theirs hexadecimal correspondings of the text given
+void printBytes(char *string, Byte *text, int size){
+	const int BYTESPERLINE = SIZE_16;
+	
+	printf("%s:\n", string);
+	
+	size = getNBlock(size) * SIZE_16;
+	
+	for(int counter = 0; counter < size / BYTESPERLINE; counter++){
+		printDecorationLine(BYTESPERLINE);
+		printf("|");
+		
+		for(int i = 0; i < BYTESPERLINE; i++)
+			printf("%02X|", text[counter * BYTESPERLINE + i]);
+		
+		printf("\n");
+		printDecorationLine(BYTESPERLINE);
+		printf("|");
+			
+		// Print normally characters between 0 and 255, but print '?' symbol for other values (This case should not occurs
+		for(int i = 0; i < BYTESPERLINE; i++){
+			char c = text[counter * BYTESPERLINE + i];
+			printf("%2c|", c > 255 || c < 0 ? '?' : c);
+		}
+			
+		printf("\n");
+		printDecorationLine(BYTESPERLINE);
+		printf("\n\n");
+	}
+}
+
+// Return a random value between a and b excluded
+int randomInteger(int a, int b){
+	return (rand() % (b - a)) + a;
+}
+
+// Return the number of blocks corresponding the number of bytes "bytes"
+int getNBlock(int bytes){
+	return (int)ceil(bytes / (double)SIZE_16);
+}
+
+// Read the message entered and return a pointer on a memory space corresponding to the length of the text
+// After that, the messsage is filled in columns order
+Byte *readEntry(char *s, int *inputLength, int *nBlock){
+	char *entry = malloc(SIZE_16 * sizeof(char));
+	char c = 0;
+	unsigned int i = 0;
+	
+	printf("%s", s);
+
+	// We read characters and realloc a table only if the length of the msg crossed the lenght of the barrier given successively by the multiples of SIZE_16
+	while((c = getchar()) != '\n'){
+		entry[i++] = c;
+		
+		if(i % SIZE_16 == 0)
+			entry = realloc(entry, i + SIZE_16);
+	} // After the loop, i represents the length of the message;
+	
+	*inputLength = i;
+	*nBlock = getNBlock(*inputLength); // Getting the number of blocks to encrypt
+	
+	// msgSize represents the number of bytes of the message including the non-filled bytes
+	const int msgSize = *nBlock * SIZE_16;
+
+	// Filling the rest of the message with random characters from the ASCII table in order to fit a multiple of 128 bytes
+	if(*inputLength % SIZE_16)
+		for(int j = *inputLength; j < msgSize; j++)
+			entry[j] = randomInteger(1, 256);
+	
+	// Transpose the messsage
+	entry = transpose(entry, *nBlock);
+	
+	return (Byte*)entry;
+}
+
+// Main function to treat encryption and decryption of the message following the AES principles
+void aesMain(Byte expandedKey[(NROUNDS + 1) * SIZE_16], Byte *input, Byte nBlock, OUT Byte *encOutput, OUT Byte *decOutput){
+	Byte *inP = input;
+	Byte *encP = encOutput;
+	Byte *decP = decOutput;
+
+	// Working successively on the differents blocks (128 bits = 16 bytes each) of the input
+	for(int i = 1; i <= nBlock; i++){
+		// Encrypting
+		aesEncrypt(expandedKey, inP, encP);
+
+		// Decrypting
+		aesDecrypt(expandedKey, encP, decP);
+		
+		inP = input + i * SIZE_16;
+		encP = encOutput + i * SIZE_16;
+		decP = decOutput + i * SIZE_16;
+	}
+}	
+
