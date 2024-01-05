@@ -1,4 +1,6 @@
 
+![](https://www.titanhq.fr/wp-content/uploads/2020/05/sensibilisation-securite-informatique-crise-covid-19.png)
+
 #              Science de l'information
 ## Theme du projet : AES
 ## Superviseur
@@ -7,12 +9,13 @@
 
 - 👤  [@Nameless[Mbassi Ewolo Loic Aron]](https://github.com/Nameless0l)
 - 👤 [@[Ngoupaye THiery]](https://github.com/)
-- 👤 [@[Vuide]](https://github.com/)
-- 👤 [@[WO]](https://github.com/)
+- 👤 [@[Vuide Ouendeu Franck Jordan]](https://github.com/whitecodename)
+- 👤 [@[Wotchoko Ngatcheu Yohan]](https://github.com/Yohanpy2004)
 - 👤 [@[WANDJI EMANUEL]](https://github.com/)
 ### 💡Description du Projet
 
 
+![](https://nevonprojects.com/wp-content/uploads/2015/06/aes-image.png)
 
 
 Ce projet a été développé dans le cadre du cours [SI] pour implementer l'algorithme de chiffrement avancé (AES) en langage C. L'objectif principal était de comprendre et de mettre en œuvre les étapes de l'algorithme AES, y compris le chiffrement et le déchiffrement. Dans notre travail nous implementons AES 128 bits
@@ -48,22 +51,20 @@ Le projet est organisé de la manière suivante :
     │   └──📄 rapport.md     : Notes sur pdf
     │
     └── 📁 exercices/
-        ├──📄 exercise1.md   : Le makdown
-        └──📄 exercise1.docx   : 
+        ├──📄 exercice 1.md   : Le makdown
+        └──📄 exercice 1.docx   : 
 
 ```
 - **`src/`** : Dossier contenant les fichiers source.
   - **`main.c`** : Le fichier source principal permettant de tester le code de l'AES.
   - **`common.c`** : Le fichier source contenant les fonctions utilitaires.
-  - **`decrypt.c`** : Le fichier source pour la génération des clés de ronde.
-  - **`encrypt.c`** : Le fichier source contenant des fonctions .
-  - **`main.c`** : Le fichier source contenant la fonction principale.
+  - **`decrypt.c`** : Le fichier source contenant les fontions necesaires au dechiffrement.
+  - **`encrypt.c`** : Le fichier source contenant des fonctions de chiffrement.
 
 - **`include/`** : Dossier contenant les fichiers d'en-tête.
   - **`common.h`** 
   - **`decrypt.h`**  
   - **`encrypt.h`** 
-  - **`main.h`** 
 - **`CMakeLists.txt`** : Fichier CMake pour la configuration du projet.
 
 - **`build/`** : Dossier où les fichiers binaires seront générés par Cmake.
@@ -82,4 +83,6 @@ Lancer l'executable avec la commande suivante :
 ```
 ./bin/aes
 ```
-
+Resultat
+===
+![Resultat](https://github.com/Nameless0l/AES-PROJECT-CRYPTOGRAPHIE/blob/main/aes_encryption_and_decryption.png?raw=true)

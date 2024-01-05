@@ -160,7 +160,7 @@ Res = (X8+X4+X3+X+1)X2+X+1+X6+X5+X4+X3+X+1
 
 Donc le résultat final est donné par le reste de cette division
 
-D’où **{2A} x {37} =** X6+X5+X4+X3+X+1=01111011={7B}
+D’où **{2A} x {37} =** X6+X5+X4+X3+X+1=01111011={7F}
 
 1. Calculons {38} x {3F}
 
