@@ -1,11 +1,8 @@
 
-![](https://www.titanhq.fr/wp-content/uploads/2020/05/sensibilisation-securite-informatique-crise-covid-19.png)
-
-Science de l'information
-===
+#              Science de l'information
 ## Theme du projet : AES
 ## Superviseur
- - 👤 **`Dr TALE Hervé KALACHI`**
+-👤 **`Dr TALE Hervé KALACHI`**
 ## Authors
 
 - 👤  [@Nameless[Mbassi Ewolo Loic Aron]](https://github.com/Nameless0l)
@@ -18,11 +15,8 @@ Science de l'information
 
 
 
-Ce projet a été développé dans le cadre du cours [SI] pour implementer l'algorithme de chiffrement avancé (AES) en langage C. L'objectif principal était de comprendre et de mettre en œuvre les étapes de l'algorithme AES, y compris le chiffrement et le déchiffrement.
+Ce projet a été développé dans le cadre du cours [SI] pour implementer l'algorithme de chiffrement avancé (AES) en langage C. L'objectif principal était de comprendre et de mettre en œuvre les étapes de l'algorithme AES, y compris le chiffrement et le déchiffrement. Dans notre travail nous implementons AES 128 bits
 Pour le faire nous avons eu besoin de la structure suivante pour le code source
-## Resume 
-![Image](https://nevonprojects.com/wp-content/uploads/2015/06/aes-image.png)
-
 
 ## 🛠️ Contenu du Projet
 
@@ -73,11 +67,6 @@ gcc -o bin/aes src/main.c src/common.c src/data.c src/decrypt.c src/encrypt.c
 ```
 Lancer l'executable avec la commande suivante :
 ```
-bin/aes
+./bin/aes
 ```
-
-
-## Resultats
-
-![App Screenshot](https://raw.githubusercontent.com/Nameless0l/AES-PROJECT-CRYPTOGRAPHIE/9d4636d19384e98024fd94cb783f03d9ea716564/aes_encryption_and_decryption.png)
 
