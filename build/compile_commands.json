@@ -1,0 +1,27 @@
+[
+{
+  "directory": "/home/nameless/Bureau/test/AES-PROJECT-CRYPTOGRAPHIE-whitecodename-aes-encrypt-decrypt/build",
+  "command": "/usr/bin/gcc   -g -o CMakeFiles/BMP.dir/src/main.c.o -c /home/nameless/Bureau/test/AES-PROJECT-CRYPTOGRAPHIE-whitecodename-aes-encrypt-decrypt/src/main.c",
+  "file": "/home/nameless/Bureau/test/AES-PROJECT-CRYPTOGRAPHIE-whitecodename-aes-encrypt-decrypt/src/main.c"
+},
+{
+  "directory": "/home/nameless/Bureau/test/AES-PROJECT-CRYPTOGRAPHIE-whitecodename-aes-encrypt-decrypt/build",
+  "command": "/usr/bin/gcc   -g -o CMakeFiles/BMP.dir/src/common.c.o -c /home/nameless/Bureau/test/AES-PROJECT-CRYPTOGRAPHIE-whitecodename-aes-encrypt-decrypt/src/common.c",
+  "file": "/home/nameless/Bureau/test/AES-PROJECT-CRYPTOGRAPHIE-whitecodename-aes-encrypt-decrypt/src/common.c"
+},
+{
+  "directory": "/home/nameless/Bureau/test/AES-PROJECT-CRYPTOGRAPHIE-whitecodename-aes-encrypt-decrypt/build",
+  "command": "/usr/bin/gcc   -g -o CMakeFiles/BMP.dir/src/data.c.o -c /home/nameless/Bureau/test/AES-PROJECT-CRYPTOGRAPHIE-whitecodename-aes-encrypt-decrypt/src/data.c",
+  "file": "/home/nameless/Bureau/test/AES-PROJECT-CRYPTOGRAPHIE-whitecodename-aes-encrypt-decrypt/src/data.c"
+},
+{
+  "directory": "/home/nameless/Bureau/test/AES-PROJECT-CRYPTOGRAPHIE-whitecodename-aes-encrypt-decrypt/build",
+  "command": "/usr/bin/gcc   -g -o CMakeFiles/BMP.dir/src/decrypt.c.o -c /home/nameless/Bureau/test/AES-PROJECT-CRYPTOGRAPHIE-whitecodename-aes-encrypt-decrypt/src/decrypt.c",
+  "file": "/home/nameless/Bureau/test/AES-PROJECT-CRYPTOGRAPHIE-whitecodename-aes-encrypt-decrypt/src/decrypt.c"
+},
+{
+  "directory": "/home/nameless/Bureau/test/AES-PROJECT-CRYPTOGRAPHIE-whitecodename-aes-encrypt-decrypt/build",
+  "command": "/usr/bin/gcc   -g -o CMakeFiles/BMP.dir/src/encrypt.c.o -c /home/nameless/Bureau/test/AES-PROJECT-CRYPTOGRAPHIE-whitecodename-aes-encrypt-decrypt/src/encrypt.c",
+  "file": "/home/nameless/Bureau/test/AES-PROJECT-CRYPTOGRAPHIE-whitecodename-aes-encrypt-decrypt/src/encrypt.c"
+}
+]

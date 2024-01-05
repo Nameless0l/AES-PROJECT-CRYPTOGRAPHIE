@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\MELA\Desktop\AES-PROJECT-CRYPTOGRAPHIE-whitecodename-aes-encrypt-decrypt\main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\MELA\Desktop\AES-PROJECT-CRYPTOGRAPHIE-whitecodename-aes-encrypt-decrypt\common.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\MELA\Desktop\AES-PROJECT-CRYPTOGRAPHIE-whitecodename-aes-encrypt-decrypt\data.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\MELA\Desktop\AES-PROJECT-CRYPTOGRAPHIE-whitecodename-aes-encrypt-decrypt\decrypt.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\MELA\Desktop\AES-PROJECT-CRYPTOGRAPHIE-whitecodename-aes-encrypt-decrypt\encrypt.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\MELA\Desktop\AES-PROJECT-CRYPTOGRAPHIE-whitecodename-aes-encrypt-decrypt\common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\MELA\Desktop\AES-PROJECT-CRYPTOGRAPHIE-whitecodename-aes-encrypt-decrypt\data.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\MELA\Desktop\AES-PROJECT-CRYPTOGRAPHIE-whitecodename-aes-encrypt-decrypt\decrypt.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\MELA\Desktop\AES-PROJECT-CRYPTOGRAPHIE-whitecodename-aes-encrypt-decrypt\encrypt.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\MELA\Desktop\AES-PROJECT-CRYPTOGRAPHIE-whitecodename-aes-encrypt-decrypt\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{F1E5AA50-2269-365C-9CE3-C46E2B86BC6A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{C71ABD83-8ECF-392F-BA4A-7A5F405173E1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

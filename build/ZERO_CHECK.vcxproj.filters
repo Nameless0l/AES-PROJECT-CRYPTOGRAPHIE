@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\MELA\Desktop\AES-PROJECT-CRYPTOGRAPHIE-whitecodename-aes-encrypt-decrypt\build\CMakeFiles\9c76f0b9d46c7bcda87c57605c31701a\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{6CAC6B08-689B-3C72-A7B9-2EFF6357D264}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,1 @@
+/usr/bin/gcc -g CMakeFiles/BMP.dir/src/main.c.o CMakeFiles/BMP.dir/src/common.c.o CMakeFiles/BMP.dir/src/data.c.o CMakeFiles/BMP.dir/src/decrypt.c.o CMakeFiles/BMP.dir/src/encrypt.c.o -o BMP 
