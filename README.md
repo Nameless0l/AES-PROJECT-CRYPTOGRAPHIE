@@ -33,11 +33,24 @@ Le projet est organisé de la manière suivante :
 │   ├──📄 decrypt.c
 │   └──📄 encrypt.c
 │
-└──📁  include/
-    ├──📄 common.h
-    ├──📄 data.h
-    ├──📄 decrypt.h
-    └──📄 encrypt.h
+├── 📁 include/
+│   ├──📄 common.h
+│   ├──📄 data.h
+│   ├──📄 decrypt.h
+│   └──📄 encrypt.h
+│
+├── 📁 bin/
+│   └──📄 aes               : Exécutable AES
+│
+└── 📁 notes/
+    ├── 📁 Rapport_AES_Project/
+    │   ├──📄 rapport.md     : Notes sur Rapport en md
+    │   └──📄 rapport.md     : Notes sur pdf
+    │
+    └── 📁 exercices/
+        ├──📄 exercise1.md   : Le makdown
+        └──📄 exercise1.docx   : 
+
 ```
 - **`src/`** : Dossier contenant les fichiers source.
   - **`main.c`** : Le fichier source principal permettant de tester le code de l'AES.
